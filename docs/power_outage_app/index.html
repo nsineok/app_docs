@@ -1,42 +1,269 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Графік відключень Волинь - Документи</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            color: #333;
-        }
-        h1 { color: #1a73e8; }
-        a { color: #1a73e8; }
-        .card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Графік відключення світла Волинь - додаток для Android</title>
+<meta name="description" content="Безкоштовний додаток для Android: графік погодинних відключень світла (ГПВ) на Волині на сьогодні й завтра, аварійні та планові відключення, сповіщення про зміни і віджет. Дані з сайту Волиньобленерго.">
+<link rel="canonical" href="https://nsineok.github.io/app_docs/power_outage_app/">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="theme-color" content="#1565C0">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="Графік відключення світла Волинь - додаток для Android">
+<meta property="og:description" content="Графік відключень на сьогодні й завтра, аварії, планові роботи, сповіщення і віджет. Для будь-якої адреси на Волині.">
+<meta property="og:url" content="https://nsineok.github.io/app_docs/power_outage_app/">
+<meta property="og:image" content="https://nsineok.github.io/app_docs/power_outage_app/img/og.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Графік відключень Волинь",
+  "alternateName": "Графік відключення світла Волинь",
+  "operatingSystem": "ANDROID",
+  "applicationCategory": "UtilitiesApplication",
+  "inLanguage": "uk",
+  "description": "Графік погодинних відключень світла на Волині на сьогодні й завтра, аварійні та планові відключення, сповіщення про зміни і віджет на головний екран. Дані з сайту ПрАТ «Волиньобленерго» (energy.volyn.ua). Неофіційний додаток.",
+  "url": "https://nsineok.github.io/app_docs/power_outage_app/",
+  "installUrl": "https://play.google.com/store/apps/details?id=ua.volyn.poweroutage",
+  "image": "https://nsineok.github.io/app_docs/power_outage_app/img/icon-512.png",
+  "screenshot": [
+    "https://nsineok.github.io/app_docs/power_outage_app/img/now.webp",
+    "https://nsineok.github.io/app_docs/power_outage_app/img/widget.webp",
+    "https://nsineok.github.io/app_docs/power_outage_app/img/tomorrow.webp",
+    "https://nsineok.github.io/app_docs/power_outage_app/img/emergency.webp",
+    "https://nsineok.github.io/app_docs/power_outage_app/img/history.webp"
+  ],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "UAH" }
+}
+</script>
+
+<style>
+:root {
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --text: #1c1f26;
+  --muted: #5b6475;
+  --border: #e1e6ef;
+  --accent: #1565c0;
+  --hero-from: #1565c0;
+  --hero-to: #0d47a1;
+  --amber: #ffc107;
+  --navy: #1a237e;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171c;
+    --surface: #1f2229;
+    --text: #e8eaf0;
+    --muted: #a3abba;
+    --border: #2e333d;
+    --accent: #90caf9;
+    --hero-from: #0f3d7a;
+    --hero-to: #0a2a57;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+}
+a { color: var(--accent); }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+.hero {
+  background: linear-gradient(180deg, var(--hero-from), var(--hero-to));
+  color: #fff;
+  padding: 48px 0 56px;
+}
+.hero .wrap { display: flex; gap: 28px; align-items: center; }
+.hero img.icon { width: 112px; height: 112px; border-radius: 26px; flex: none; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.hero h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.2; }
+.hero p { margin: 0 0 20px; font-size: 18px; color: #dce7f7; max-width: 620px; }
+.cta {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 13px 22px;
+  border-radius: 12px;
+  font-size: 17px;
+}
+.cta:hover { filter: brightness(1.05); }
+.note { margin-top: 12px; font-size: 14px; color: #c9d7ee; }
+.note a { color: #fff; }
+
+section { padding: 40px 0 8px; }
+h2 { font-size: 26px; margin: 0 0 18px; line-height: 1.25; }
+
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.feature { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 18px 14px; }
+.feature h3 { margin: 0 0 6px; font-size: 18px; }
+.feature p { margin: 0; color: var(--muted); }
+
+.shots { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+.shots figure { margin: 0; flex: none; width: 240px; scroll-snap-align: start; }
+.shots img { width: 240px; height: 427px; border-radius: 16px; border: 1px solid var(--border); display: block; background: var(--surface); }
+.shots figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+.places { color: var(--muted); }
+
+details { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+summary { font-weight: 600; cursor: pointer; }
+details p { margin: 10px 0 0; color: var(--muted); }
+
+footer { margin-top: 40px; padding: 24px 0 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+footer p { margin: 4px 0; }
+
+@media (max-width: 640px) {
+  .hero { padding: 32px 0 40px; }
+  .hero .wrap { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .hero img.icon { width: 88px; height: 88px; border-radius: 20px; }
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 17px; }
+}
+</style>
 </head>
 <body>
-    <h1>Графік відключень Волинь</h1>
-    <p>Додаток для моніторингу графіків відключення електроенергії у Волинській області.</p>
 
-    <div class="card">
-        <h2>Документи</h2>
-        <ul>
-            <li><a href="privacy-policy.html">Privacy Policy (Політика конфіденційності)</a></li>
-        </ul>
+<header class="hero">
+  <div class="wrap">
+    <img class="icon" src="img/icon-192.png" width="112" height="112" alt="Іконка застосунку Графік відключень Волинь">
+    <div>
+      <h1>Графік відключення світла Волинь</h1>
+      <p>Безкоштовний додаток для Android: графік погодинних відключень (ГПВ) на сьогодні й завтра, аварійні та планові відключення, сповіщення про зміни і віджет на головний екран.</p>
+      <a class="cta" href="https://play.google.com/store/apps/details?id=ua.volyn.poweroutage">Завантажити в Google Play</a>
+      <p class="note">Неофіційний додаток. Дані з сайту <a href="https://energy.volyn.ua/spozhyvacham/perervy-u-elektropostachanni/hrafik-vidkliuchen/" rel="nofollow">Волиньобленерго</a>.</p>
     </div>
+  </div>
+</header>
 
-    <div class="card">
-        <h2>Контакти</h2>
-        <p>Email: <a href="mailto:n.sineok@gmail.com">n.sineok@gmail.com</a></p>
+<main class="wrap">
+
+<section>
+  <h2>Що вміє застосунок</h2>
+  <div class="features">
+    <div class="feature">
+      <h3>Чи є світло просто зараз</h3>
+      <p>"Світло є", "Скоро відключення" чи "Зараз відключення" з відліком часу до відключення або повернення світла.</p>
     </div>
+    <div class="feature">
+      <h3>Сповіщення про зміни графіка</h3>
+      <p>Щойно графік на сьогодні чи завтра змінився, а також перед відключенням і перед поверненням світла.</p>
+    </div>
+    <div class="feature">
+      <h3>Аварійні відключення</h3>
+      <p>Коли почалась аварія, на коли обіцяють відновлення, чи його перенесли, і коли аварію усунено.</p>
+    </div>
+    <div class="feature">
+      <h3>Планові роботи</h3>
+      <p>Роботи на мережі за вашою адресою - заздалегідь, з датою й годинами.</p>
+    </div>
+    <div class="feature">
+      <h3>Віджет на головний екран</h3>
+      <p>Статус і наступне відключення без відкриття застосунку. Для кожної адреси - свій віджет.</p>
+    </div>
+    <div class="feature">
+      <h3>До трьох адрес та історія</h3>
+      <p>Дім, робота, батьки. Історія показує, що й коли змінилось у графіку, аваріях і роботах.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Як це виглядає</h2>
+  <div class="shots">
+    <figure>
+      <picture>
+        <source srcset="img/now-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="img/now.webp" width="240" height="427" loading="lazy" alt="Головний екран: зараз відключення, світло о 21:30, години відключень на сьогодні">
+      </picture>
+      <figcaption>Статус і години відключень</figcaption>
+    </figure>
+    <figure>
+      <img src="img/widget.webp" width="240" height="427" loading="lazy" alt="Віджети на головному екрані телефона для трьох адрес">
+      <figcaption>Віджет для кожної адреси</figcaption>
+    </figure>
+    <figure>
+      <picture>
+        <source srcset="img/tomorrow-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="img/tomorrow.webp" width="240" height="427" loading="lazy" alt="Графік на завтра змінився: додано нове відключення">
+      </picture>
+      <figcaption>Зміни графіка на завтра</figcaption>
+    </figure>
+    <figure>
+      <picture>
+        <source srcset="img/emergency-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="img/emergency.webp" width="240" height="427" loading="lazy" alt="Аварійне відключення з причиною та очікуваним часом відновлення">
+      </picture>
+      <figcaption>Аварії й час відновлення</figcaption>
+    </figure>
+    <figure>
+      <picture>
+        <source srcset="img/history-dark.webp" media="(prefers-color-scheme: dark)">
+        <img src="img/history.webp" width="240" height="427" loading="lazy" alt="Історія змін графіка, аварій і планових робіт з фільтрами">
+      </picture>
+      <figcaption>Історія змін</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Для яких населених пунктів</h2>
+  <p class="places">Для будь-якої адреси, яку обслуговує Волиньобленерго: Луцьк, Ковель, Нововолинськ, Володимир, Ківерці, Рожище, Горохів, Любомль, Камінь-Каширський, Маневичі, Ратне, Шацьк, Турійськ, Берестечко та інші міста й села Волинської області.</p>
+</section>
+
+<section>
+  <h2>Питання й відповіді</h2>
+  <details>
+    <summary>Як дізнатися свою чергу відключень?</summary>
+    <p>Додайте адресу в застосунку: населений пункт, вулицю й номер будинку. Застосунок знайде вашу чергу (наприклад, 3.1) і покаже години відключень на сьогодні й завтра.</p>
+  </details>
+  <details>
+    <summary>Звідки застосунок бере графіки відключень?</summary>
+    <p>З офіційного сайту ПрАТ «Волиньобленерго» energy.volyn.ua: графіки погодинних відключень, аварійні та планові відключення. Там завжди можна перевірити актуальну інформацію.</p>
+  </details>
+  <details>
+    <summary>Це офіційний застосунок Волиньобленерго?</summary>
+    <p>Ні. Застосунок неофіційний і не пов'язаний з ПрАТ «Волиньобленерго». Він лише перевіряє їхній сайт і показує дані зручніше.</p>
+  </details>
+  <details>
+    <summary>Як часто оновлюється графік?</summary>
+    <p>У фоні застосунок перевіряє сайт раз на 15-60 хвилин (налаштовується) і надсилає сповіщення, якщо графік змінився. Тому зміни можуть з'являтися із затримкою.</p>
+  </details>
+  <details>
+    <summary>Чому сповіщення можуть запізнюватися?</summary>
+    <p>Деякі телефони (Xiaomi, Samsung, Huawei та інші) обмежують роботу застосунків у фоні. У налаштуваннях застосунку, у розділі "Сповіщення і фон", є перевірка дозволів і поради для різних телефонів.</p>
+  </details>
+  <details>
+    <summary>Скільки це коштує?</summary>
+    <p>Застосунок безкоштовний. У ньому є невеликий рекламний банер.</p>
+  </details>
+</section>
+
+<section>
+  <a class="cta" href="https://play.google.com/store/apps/details?id=ua.volyn.poweroutage">Завантажити в Google Play</a>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><a href="privacy-policy.html">Політика конфіденційності</a></p>
+    <p>Зворотний зв'язок: <a href="mailto:n.sineok@gmail.com">n.sineok@gmail.com</a></p>
+    <p>Неофіційний застосунок, не пов'язаний з ПрАТ «Волиньобленерго». Графіки - з сайту energy.volyn.ua.</p>
+  </div>
+</footer>
+
 </body>
 </html>
